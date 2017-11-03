@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <script src="jquery.min.js"></script>
+    <script src="iscroll-probe.js"></script>
+</head>
+<script>
+    $(document).ready(function () {
+        pulldown = document.getElementById('pulldown');  
+        H = pulldown.offsetHeight;  
+        var flag=true;
+        var myScroll = new IScroll('#wrapper',{
+            mouseWheel: true,
+            startY:-H,
+            probeType:3
+        });
+        console.log("这是开始***" + myScroll.y);
+
+        myScroll.on('scroll',function(){
+            var y = this.y;
+            maxY = this.maxScrollY - y;
+            if(y>40){
+                $('.pullDownLabel').html('松手刷新').addClass('loading');
+
+            }else if(y<40&&!$('.pullDownLabel').hasClass('loading')){
+                $('.pullDownLabel').html('下拉刷新...');
+
+            }
+
+            if(y<maxY){
+                $('.pullUpLabel').html('松手加载').addClass('loading');
+
+            }else if(y>maxY&&!$('.pullUpLabel').hasClass('loading')){
+                $('.pullUpLabel').html('上拉加载...')
+            }
+        })        
+
+        myScroll.on('scrollEnd',function(){  
+            if($('.pullDownLabel').hasClass('loading')){
+                $('.pullDownLabel').html('正在刷新');
+                down();
+
+            }else if($('.pullUpLabel').hasClass('loading')){
+                $('.pullUpLabel').html('正在加载');
+                up();;
+            }
+        })
+        function down(){
+            if(!flag){
+                return;
+            }
+            flag=false;
+            setTimeout(function(){
+                myScroll.refresh();
+                $('.pullDownLabel').html('下拉刷新...').removeClass('loading');
+                myScroll.y='-40px';
+                myScroll.scrollTo(0, -40);
+                flag=true;
+            },2000)
+        }
+        var count=0;
+        function up(){
+             if(!flag){
+                return;
+            }
+            flag=false;
+            setTimeout(function(){
+                for(var i=0;i<5;i++){
+                    count++;
+                    $("<li>").html('new'+count).appendTo('ul');
+                }
+                myScroll.refresh();
+                $('.pullUpLabel').html('上拉加载...').removeClass('loading');
+                flag=true;
+            },2000)
+        }
+    })
+
+</script>
+<style>
+    body,html{
+        height:100%;
+        overflow: hidden;
+        padding: 0;
+        margin:0;
+    }
+    li{
+        height: 40px;
+        line-height: 40px;
+    }
+    #wrapper{
+        height:100%;
+        overflow: hidden;
+    }
+    ul{
+        margin:0;
+    }
+    #pulldown, #pullup {
+        background:#fff;
+        height:40px;
+        line-height:40px;
+        border-bottom:1px solid #ccc;
+        font-weight:bold;
+        font-size:14px;
+        color:#888;
+        text-align: center;
+    }
+</style>
+<body>
+<div id="wrapper">
+    <div id="scroller">
+        <div id="pulldown">
+           <span class="pullDownLabel">下拉刷新...</span>
+        </div>
+        <ul>
+            <li>Pretty row 1</li>
+            <li>Pretty row 2</li>
+            <li>Pretty row 3</li>
+            <li>Pretty row 4</li>
+            <li>Pretty row 5</li>
+            <li>Pretty row 6</li>
+            <li>Pretty row 7</li>
+            <li>Pretty row 8</li>
+            <li>Pretty row 9</li>
+            <li>Pretty row 10</li>
+            <li>Pretty row 11</li>
+            <li>Pretty row 12</li>
+            <li>Pretty row 13</li>
+            <li>Pretty row 14</li>
+            <li>Pretty row 15</li>
+            <li>Pretty row 16</li>
+            <li>Pretty row 17</li>
+            <li>Pretty row 18</li>
+            <li>Pretty row 19</li>
+            <li>Pretty row 20</li>
+            <li>Pretty row 21</li>
+            <li>Pretty row 22</li>
+            <li>Pretty row 23</li>
+            <li>Pretty row 24</li>
+            <li>Pretty row 25</li>
+            <li>Pretty row 26</li>
+            <li>Pretty row 27</li>
+            <li>Pretty row 28</li>
+            <li>Pretty row 29</li>
+            <li>Pretty row 30</li>
+            <li>Pretty row 31</li>
+            <li>Pretty row 32</li>
+            <li>Pretty row 33</li>
+            <li>Pretty row 34</li>
+            <li>Pretty row 35</li>
+            <li>Pretty row 36</li>
+            <li>Pretty row 37</li>
+            <li>Pretty row 38</li>
+            <li>Pretty row 39</li>
+            <li>Pretty row 40</li>
+            <li>Pretty row 41</li>
+            <li>Pretty row 42</li>
+            <li>Pretty row 43</li>
+            <li>Pretty row 44</li>
+            <li>Pretty row 45</li>
+            <li>Pretty row 46</li>
+            <li>Pretty row 47</li>
+            <li>Pretty row 48</li>
+            <li>Pretty row 49</li>
+            <li>Pretty row 50</li>
+        </ul>
+        <div id="pullup">
+            <span class="pullUpLabel">上拉加载...</span>
+        </div>
+    </div>
+</div>
+</body>
+</html>
